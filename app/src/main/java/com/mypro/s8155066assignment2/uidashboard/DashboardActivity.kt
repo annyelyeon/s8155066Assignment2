@@ -1,21 +1,51 @@
 package com.mypro.s8155066assignment2.uidashboard
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.mypro.s8155066assignment2.R
+import com.mypro.s8155066assignment2.uidetails.DetailsActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
+
+    private val viewModel: DashboardViewModel by viewModels()
+    private lateinit var adapter: MovieAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_dashboard)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val tvError = findViewById<TextView>(R.id.tvError)
+
+        adapter = MovieAdapter(onItemClick = { movie ->
+            val intent = Intent(this, DetailsActivity::class.java)
+            intent.putExtra("movie", movie)
+            startActivity(intent)
+        })
+        recyclerView.adapter = adapter
+
+        val keypass = intent.getStringExtra("keypass") ?: ""
+
+        viewModel.loadMovies(
+            keypass,
+            onSuccess = { movies ->
+                progressBar.visibility = View.GONE
+                adapter.updateData(movies)
+            },
+            onError = { message ->
+                progressBar.visibility = View.GONE
+                tvError.text = message
+                tvError.visibility = View.VISIBLE
+            }
+        )
     }
 }
