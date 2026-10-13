@@ -7,11 +7,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mypro.s8155066assignment2.R
 import com.mypro.s8155066assignment2.uidetails.DetailsActivity
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
 
@@ -34,18 +37,34 @@ class DashboardActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         val keypass = intent.getStringExtra("keypass") ?: ""
+        viewModel.loadMovies(keypass)
 
-        viewModel.loadMovies(
-            keypass,
-            onSuccess = { movies ->
-                progressBar.visibility = View.GONE
-                adapter.updateData(movies)
-            },
-            onError = { message ->
-                progressBar.visibility = View.GONE
-                tvError.text = message
-                tvError.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                launch {
+                    viewModel.isLoading.collect { loading ->
+                        progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+                    }
+                }
+
+                launch {
+                    viewModel.errorState.collect { message ->
+                        if (message == null) {
+                            tvError.visibility = View.GONE
+                        } else {
+                            tvError.text = message
+                            tvError.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.movies.collect { movies ->
+                        adapter.updateData(movies)
+                    }
+                }
             }
-        )
+        }
     }
 }
