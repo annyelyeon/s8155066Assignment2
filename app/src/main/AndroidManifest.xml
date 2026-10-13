@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.S8155066Assignment2">
         <activity
-            android:name=".MainActivity"
+            android:name=".uilogin.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -24,6 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".uidashboard.DashboardActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".uidetails.DetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
