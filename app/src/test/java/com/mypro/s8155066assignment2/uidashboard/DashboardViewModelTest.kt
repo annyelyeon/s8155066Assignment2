@@ -25,12 +25,12 @@ class DashboardViewModelTest {
     private lateinit var repository: Repository
     private val testDispatcher = StandardTestDispatcher()
 
-    private val movie = Entity(
-        title = "The Godfather",
-        director = "Francis Ford Coppola",
-        genre = "Crime Drama",
-        releaseYear = 1972,
-        description = "An epic crime film"
+    private val movie = mapOf(
+        "title" to "The Godfather",
+        "director" to "Francis Ford Coppola",
+        "genre" to "Crime Drama",
+        "releaseYear" to 1972,
+        "description" to "An epic crime film"
     )
 
     @Before
@@ -48,7 +48,7 @@ class DashboardViewModelTest {
     @Test
     fun `loadMovies success updates movies list`() = runTest(testDispatcher) {
         coEvery { repository.getDashboard("movies") } returns DashboardResponse(
-            entities = listOf(movie, movie.copy(title = "Pulp Fiction")),
+            entities = listOf(movie, movie + ("title" to "Pulp Fiction")),
             entityTotal = 2
         )
 
@@ -56,10 +56,30 @@ class DashboardViewModelTest {
         advanceUntilIdle()
 
         assertEquals(2, viewModel.movies.value.size)
-        assertEquals("The Godfather", viewModel.movies.value[0].title)
-        assertEquals("Pulp Fiction", viewModel.movies.value[1].title)
+        assertEquals("The Godfather", viewModel.movies.value[0]["title"])
+        assertEquals("Pulp Fiction", viewModel.movies.value[1]["title"])
         assertNull(viewModel.errorState.value)
         assertEquals(false, viewModel.isLoading.value)
+    }
+
+    @Test
+    fun `loadMovies works with a different entity type`() = runTest(testDispatcher) {
+        val photo: Entity = mapOf(
+            "technique" to "Long Exposure",
+            "equipment" to "Tripod",
+            "description" to "Shutter left open"
+        )
+        coEvery { repository.getDashboard("photography") } returns DashboardResponse(
+            entities = listOf(photo),
+            entityTotal = 1
+        )
+
+        viewModel.loadMovies("photography")
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.movies.value.size)
+        assertEquals("Long Exposure", viewModel.movies.value[0]["technique"])
+        assertNull(viewModel.errorState.value)
     }
 
     @Test

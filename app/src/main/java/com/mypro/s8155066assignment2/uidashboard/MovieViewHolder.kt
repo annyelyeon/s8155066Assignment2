@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mypro.s8155066assignment2.R
 import com.mypro.s8155066assignment2.data.Entity
+import com.mypro.s8155066assignment2.data.summaryFields
 
 class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -14,11 +15,22 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvYear: TextView = view.findViewById(R.id.tvYear)
 
     fun bind(movie: Entity, onItemClick: (Entity) -> Unit) {
-        tvTitle.text = movie.title
-        tvDirector.text = "Director: ${movie.director}"
-        tvGenre.text = "Genre: ${movie.genre}"
-        tvYear.text = "Year: ${movie.releaseYear}"
+        val fields = movie.summaryFields()
+
+        tvTitle.text = fields.getOrNull(0)?.second ?: ""
+        showLine(tvDirector, fields.getOrNull(1))
+        showLine(tvGenre, fields.getOrNull(2))
+        showLine(tvYear, fields.getOrNull(3))
 
         itemView.setOnClickListener { onItemClick(movie) }
+    }
+
+    private fun showLine(textView: TextView, field: Pair<String, String>?) {
+        if (field == null) {
+            textView.visibility = View.GONE
+        } else {
+            textView.visibility = View.VISIBLE
+            textView.text = "${field.first}: ${field.second}"
+        }
     }
 }

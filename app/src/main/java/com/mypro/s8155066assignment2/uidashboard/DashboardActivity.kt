@@ -31,7 +31,7 @@ class DashboardActivity : AppCompatActivity() {
 
         adapter = MovieAdapter(onItemClick = { movie ->
             val intent = Intent(this, DetailsActivity::class.java)
-            intent.putExtra("movie", movie)
+            intent.putExtra("movie", LinkedHashMap(movie))
             startActivity(intent)
         })
         recyclerView.adapter = adapter

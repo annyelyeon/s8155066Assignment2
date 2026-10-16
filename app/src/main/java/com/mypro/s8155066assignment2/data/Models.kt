@@ -1,7 +1,5 @@
 package com.mypro.s8155066assignment2.data
 
-import java.io.Serializable
-
 data class LoginRequest(
     val username: String,
     val password: String
@@ -16,10 +14,9 @@ data class DashboardResponse(
     val entityTotal: Int
 )
 
-data class Entity(
-    val title: String,
-    val director: String,
-    val genre: String,
-    val releaseYear: Int,
-    val description: String
-) : Serializable
+// Remove hardcoding entities, allowing to access with anyone's keypass and show their details
+typealias Entity = Map<String, Any?>
+fun Any?.toDisplayText(): String =
+    if (this is Double && this % 1.0 == 0.0) this.toInt().toString() else this?.toString() ?: ""
+fun Entity.summaryFields(): List<Pair<String, String>> =
+    entries.filter { it.key != "description" }.map { it.key to it.value.toDisplayText() }

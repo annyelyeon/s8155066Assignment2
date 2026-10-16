@@ -17,24 +17,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvDirector"
+            android:id="@+id/tvInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tvGenre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tvYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:textSize="16sp" />
 
         <TextView
