@@ -39,7 +39,7 @@ Android app for NIT3213 that logs in with the nit3213api, lists movies in a Recy
 - Base URL: `https://nit3213apinew.onrender.com`
 - `POST /footscray/auth` returns a keypass
 - `GET /dashboard/{keypass}` returns the list of entities (the keypass for this project is `movies`)
-
+- Entities are parsed as key-value maps, so the app works with any keypass topic.
 The server may take a while to respond on the first request, because it needs time to wake up. A loading indicator is shown while the app waits.
 
 ## Project Structure
@@ -50,13 +50,9 @@ The server may take a while to respond on the first request, because it needs ti
 - `uidetails/` : Details screen
 
 ## Notes
-This project uses AGP 9, so Hilt runs with KSP instead of kapt
-(the lecture slides show kapt). Hilt version: 2.59.2.
+This project uses AGP 9, so Hilt runs with KSP. Hilt version: 2.59.2.
 
 ## Tests
 Unit tests are in the `test` folder:
 - `LoginViewModelTest` (3 tests): empty fields, login success, login failure
 - `DashboardViewModelTest` (2 tests): load success, load failure
-
-To run them, right-click the `test` folder in Android Studio and choose **Run Tests**,
-or run `gradlew.bat test` (Windows) / `./gradlew test` (Mac, Linux) in the project folder.
