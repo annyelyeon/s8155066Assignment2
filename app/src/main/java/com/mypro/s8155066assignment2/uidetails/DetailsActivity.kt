@@ -7,6 +7,7 @@ import com.mypro.s8155066assignment2.R
 import com.mypro.s8155066assignment2.data.Entity
 import com.mypro.s8155066assignment2.data.summaryFields
 import com.mypro.s8155066assignment2.data.toDisplayText
+import android.widget.Button
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -14,6 +15,8 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+
+        findViewById<Button>(R.id.btnBack).setOnClickListener { finish() }
 
         val movie = intent.getSerializableExtra("movie") as? Entity
         if (movie == null) {
